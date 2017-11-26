@@ -1,16 +1,53 @@
-# jetcd - A Java client for etcd
+# jetcd - A Java Client for etcd
+[![Build Status](https://img.shields.io/travis/coreos/jetcd/master.svg?style=flat-square)](https://travis-ci.org/coreos/jetcd)
+[![License](https://img.shields.io/badge/Licence-Apache%202.0-blue.svg?style=flat-square)](http://www.apache.org/licenses/LICENSE-2.0.html)
+[![Maven Central](https://img.shields.io/maven-central/v/com/coreos/jetcd-core.svg?style=flat-square)](https://search.maven.org/#search%7Cga%7C1%7Ccoreos)
+[![GitHub release](https://img.shields.io/github/release/coreos/jetcd.svg?style=flat-square)](https://github.com/coreos/jetcd/releases)
 
-jetcd requires JDK 8 to work correctly.
+jetcd is the official java client for [etcd](https://github.com/coreos/etcd)v3.
 
-[![Build Status](https://travis-ci.org/coreos/jetcd.svg?branch=master)](https://travis-ci.org/coreos/jetcd)
+> Note: jetcd is work-in-progress and may break backward compatibility.
 
-## Getting started
+## Java Versions
+
+Java 8 or above is required.
+
+## Download
+
+### Maven
+```xml
+<dependency>
+  <groupId>com.coreos</groupId>
+  <artifactId>jetcd-core</artifactId>
+  <version>0.0.1</version>
+</dependency>
+```
+
+Development snapshots are available in [Sonatypes's snapshot repository](https://oss.sonatype.org/content/repositories/snapshots/).
+
+### Gradle
+
+```
+dependencies {
+    compile 'com.coreos:jetcd-core:0.0.1'
+}
+``` 
+
+### Manual
+
+Download latest jetcd-core jar from [Maven](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.coreos%22%20AND%20v%3A%220.0.1%22) and all its dependent jars:
+
+[grpc-core-1.5.0.jar](http://repo1.maven.org/maven2/io/grpc/grpc-core/1.5.0/)
+[grpc-netty-1.5.0.jar](http://repo1.maven.org/maven2/io/grpc/grpc-netty/1.5.0/)
+[grpc-protobuf-1.5.0.jar](http://repo1.maven.org/maven2/io/grpc/grpc-protobuf/1.5.0/)
+[grpc-stub-1.5.0.jar](http://repo1.maven.org/maven2/io/grpc/grpc-stub/1.5.0/)
+[slf4j-api-1.7.2.jar](http://repo1.maven.org/maven2/org/apache/directory/studio/org.slf4j.api/1.7.2/)
 
 ### Usage
 
 ```java
 // create client
-Client client = ClientBuilder.newBuilder().endpoints("http://localhost:2379").build();
+Client client = Client.builder().endpoints("http://localhost:2379").build();
 KV kvClient = client.getKVClient();
 
 ByteSequence key = ByteSequence.fromString("test_key");
@@ -19,21 +56,31 @@ ByteSequence value = ByteSequence.fromString("test_value");
 // put the key-value
 kvClient.put(key, value).get();
 // get the CompletableFuture
-CompletableFuture<RangeResponse> getFuture = kvClient.get(key);
+CompletableFuture<GetResponse> getFuture = kvClient.get(key);
 // get the value from CompletableFuture
-RangeResponse response = getFuture.get();
+GetResponse response = getFuture.get();
 // delete the key
-DeleteRangeResponse deleteRangeResponse = kvClient.delete(key).get();
+DeleteResponse deleteRangeResponse = kvClient.delete(key).get();
 ```
 
 For full etcd v3 API, plesase refer to [API_Reference](https://github.com/coreos/etcd/blob/master/Documentation/dev-guide/api_reference_v3.md).
 
+### Examples
+
+The [examples](https://github.com/coreos/jetcd/tree/master/jetcd-examples) are standalone projects that show usage of jetcd.
+
+## Versioning
+
+The project follows [Semantic Versioning](http://semver.org/).
+
+The current major version is zero (0.y.z). Anything may change at any time. The public API should not be considered stable.
+
 ## Running tests
 
-The project is to be tested against a three node `etcd` setup, launched by the [scripts/run_etcd.sh](scripts/run_etcd.sh) shell script:
+The project is to be tested against a three node `etcd` setup, launched by the [scripts/run_etcd.sh](etc/scripts/run_etcd.sh) shell script:
 
 ```
-./scripts/run_etcd.sh
+./etc/scripts/run_etcd.sh
 ```
 
 It should work on either macOS or Linux.
@@ -84,6 +131,15 @@ Tests run: 37, Failures: 0, Errors: 0, Skipped: 0
 ## Contact
 
 * Mailing list: [etcd-dev](https://groups.google.com/forum/?hl=en#!forum/etcd-dev)
+* IRC: #[etcd](irc://irc.freenode.org:6667/#etcd) on freenode.org
+
+## Contributing
+
+See [CONTRIBUTING](https://github.com/coreos/jetcd/blob/master/CONTRIBUTING.md) for details on submitting patches and the contribution workflow.
+
+## Reporting bugs
+
+See [reporting bugs](https://github.com/coreos/etcd/blob/master/Documentation/reporting_bugs.md) for details about reporting any issues.
 
 ## License
 
